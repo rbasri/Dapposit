@@ -1,4 +1,4 @@
-# Decentralized Escrow Application
+# Dapposit - a safer way to make your security deposit
 
 This is an Escrow Dapp built with [Hardhat](https://hardhat.org/).
 
@@ -20,6 +20,6 @@ Compile the contracts using `npx hardhat compile`. The artifacts will be placed 
 
 ## Front-End
 
-To run the front-end application move into the `app` folder and run `parcel index.html`.
+To run the front-end application run `parcel app/index.html` from the root directory.
 
 You can learn more about Parcel [here](https://parceljs.org/).
