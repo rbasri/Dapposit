@@ -5,3 +5,4 @@ cache
 .cache
 node_modules
 artifacts
+scripts

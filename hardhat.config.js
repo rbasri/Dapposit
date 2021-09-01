@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 
 module.exports = {
-  solidity: "0.7.5",
+  solidity: "0.8.4",
   paths: {
     artifacts: "./app/artifacts",
   }

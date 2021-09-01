@@ -1,20 +1,15 @@
 body {
   background-color: #eee;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 img {
   margin: auto;
   display: flex;
-  border: 1px solid rgb(180, 180, 180);
+  border: 1px solid #b4b4b4;
   width: 22%;
   border-radius: 15px;
 }
-
-// .title {
-//   margin: auto;
-//   text-align: center;
-// }
 
 .mainContainer {
   display: flex;
@@ -24,7 +19,7 @@ img {
   margin: 20px;
   width: 50%;
   padding: 25px;
-  border: 1px solid rgb(180, 180, 180);
+  border: 1px solid #b4b4b4;
   background-color: #fff;
   border-radius: 15px;
 }
@@ -32,7 +27,7 @@ img {
 h1 {
   margin: 10px;
   padding: 10px;
-  border-bottom: 1px solid rgb(226, 226, 226);
+  border-bottom: 1px solid #e2e2e2;
   font-size: 22px;
 }
 
@@ -45,13 +40,13 @@ label {
   font-size: 14px;
 }
 
-input[type="text"] {
+input[type=text] {
   padding: 6px;
   font-size: 14px;
 }
 
 .close {
-  background-color: rgb(218, 35, 35);
+  background-color: #da2323;
   color: white;
   text-align: center;
   font-weight: bold;
@@ -76,8 +71,8 @@ input[type="text"] {
   cursor: pointer;
 }
 
-#withdraw{
-  background-color: rgb(19, 161, 43);
+#withdraw {
+  background-color: #13a12b;
 }
 
 .existing-contract ul {
@@ -100,7 +95,7 @@ input[type="text"] {
   font-weight: bold;
 }
 
-.instructions{
+.instructions {
   text-align: center;
   list-style-position: inside;
   margin: auto;
@@ -119,3 +114,5 @@ input[type="text"] {
 #addrContainer {
   padding-left: 20px;
 }
+
+/*# sourceMappingURL=/index2.d4334c5b.css.map */

@@ -1,46 +1,67 @@
-const { assert } = require("chai");
+const { assert, expect } = require("chai");
+//const { Contract } = require("ethers");
+const { ethers } = require("hardhat");
+const passTime = (time) => ethers.provider.send('evm_increaseTime', [time]);
+const oneWeek = 60 * 60 * 24 * 7;
 
-describe("Escrow", function() {
-  let contract;
-  let depositor;
-  let beneficiary;
-  let arbiter;
-  const deposit = ethers.utils.parseEther("1");
+describe("SecurityDeposit", function () {
+  let deposit = ethers.utils.parseEther("1");
+  let securityDeposit;
+  const tenant = ethers.provider.getSigner(0);
+  const landlord = ethers.provider.getSigner(1);
+
   beforeEach(async () => {
-    depositor = ethers.provider.getSigner(0);
-    beneficiary = ethers.provider.getSigner(1);
-    arbiter = ethers.provider.getSigner(2);
-    const Escrow = await ethers.getContractFactory("Escrow");
-    contract = await Escrow.deploy(arbiter.getAddress(), beneficiary.getAddress(), {
-      value: deposit
+    const SecurityDeposit = await ethers.getContractFactory("SecurityDeposit");
+    securityDeposit = await SecurityDeposit.deploy(await landlord.getAddress(), {value: deposit});
+    await securityDeposit.deployed();
+  });
+
+  it("should be holding the deposit amount", async() => {
+    const newBalance = await ethers.provider.getBalance(securityDeposit.address);
+    assert(deposit.eq(newBalance));
+  });
+
+  it("should not allow the landlord to immediately take out the deposit", async() => {
+    await expect(securityDeposit.connect(landlord).withdrawFunds()).to.be.reverted;
+  });
+
+  it("should allow the tenant to take back the funds right away", async() => {
+    const beforeBalance = await ethers.provider.getBalance(tenant.getAddress());
+    await securityDeposit.withdrawFunds();
+    const afterBalance = await ethers.provider.getBalance(tenant.getAddress());
+    assert(afterBalance.gt(beforeBalance));
+  });
+
+  it("should not allow tenant to call withdraw twice", async() => {
+    await securityDeposit.withdrawFunds();
+    await expect(securityDeposit.withdrawFunds()).to.be.reverted;
+  });
+  
+  it("should not accept more ether after deployed", async() => {
+    await expect(tenant.sendTransaction({
+      to: securityDeposit.address,
+      value: ethers.utils.parseEther("1"),
+    })).to.be.reverted;
+  });
+
+  describe("after waiting the delay period", function () {
+    it("should allow the landlord to withdraw the funds", async() => {
+      await passTime(oneWeek*4);
+      const beforeBalance = await ethers.provider.getBalance(landlord.getAddress());
+      await securityDeposit.connect(landlord).withdrawFunds();
+      const afterBalance = await ethers.provider.getBalance(landlord.getAddress());
+      assert(afterBalance.gt(beforeBalance));
     });
-    await contract.deployed();
-  });
 
-  it("should be funded initially", async function() {
-    let balance = await ethers.provider.getBalance(contract.address);
-    assert.equal(balance.toString(), deposit.toString());
-  });
-
-  describe("after approval from address other than the arbiter", () => {
-    it("should revert", async () => {
-        let ex;
-        try {
-            await contract.connect(beneficiary).approve();
-        }
-        catch (_ex) {
-            ex = _ex;
-        }
-        assert(ex, "Attempted to approve the Escrow from the beneficiary address. Expected transaction to revert!");
+    it("should not allow the tenant to take back the funds", async() => {
+      await passTime(oneWeek*4);
+      await expect(securityDeposit.withdrawFunds()).to.be.reverted;
     });
-  });
 
-  describe("after approval from the arbiter", () => {
-    it("should transfer balance to beneficiary", async () => {
-        const before = await ethers.provider.getBalance(beneficiary.getAddress());
-        const approve = await contract.connect(arbiter).approve();
-        const after = await ethers.provider.getBalance(beneficiary.getAddress());
-        assert.equal(after.sub(before).toString(), deposit.toString());
+    it("should not allow landlord to call withdraw twice", async() => {
+      await passTime(oneWeek*4);
+      await securityDeposit.connect(landlord).withdrawFunds();
+      await expect(securityDeposit.connect(landlord).withdrawFunds()).to.be.reverted;
     });
   });
 });
