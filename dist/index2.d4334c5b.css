@@ -24,6 +24,10 @@ img {
   border-radius: 15px;
 }
 
+.existing-contract {
+  font-size: 15px;
+}
+
 h1 {
   margin: 10px;
   padding: 10px;
