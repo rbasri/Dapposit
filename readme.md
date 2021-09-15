@@ -4,11 +4,12 @@ This is an Escrow Dapp built with [Hardhat](https://hardhat.org/).
 
 ## Project Layout
 
-There are three top-level folders:
+There are four top-level folders:
 
 1. `/app` - contains the front-end application
 2. `/contracts` - contains the solidity contract
 3. `/tests` - contains tests for the solidity contract
+4. `/server` - contains a simple script to server static files built with parcel
 
 ## Setup
 
